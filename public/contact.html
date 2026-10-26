@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact | Scale It Now</title>
+<meta name="description" content="Contact Scale It Now for help with the Digital Marketing Fundamentals course.">
+<meta name="theme-color" content="#0a0a1c">
+<link rel="icon" href="assets/logo-mark.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body><noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2231897204023745&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="logo-mark" src="assets/logo-mark.jpg" alt="Scale It Now logo"><span><b>SCALE IT NOW</b><small>India's Best Digital Marketing Agency</small></span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="index.html">Home</a><span class="dd"><a href="index.html#curriculum" class="dd-btn">Course <small aria-hidden="true">⌄</small></a><span class="dd-menu"><a href="index.html#curriculum">Curriculum</a><a href="index.html#about">What you'll learn</a><a href="index.html#offer">Pricing</a><a href="verify.html">Verify certificate</a></span></span><a href="index.html#about">About Us</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
+      <a href="access.html">Access my course</a>
+    </nav>
+    <div class="hdr-right"><a class="btn sm header-cta" href="checkout.html">Buy Course — ₹9,999</a><a class="cart" href="checkout.html" aria-label="Checkout"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 7H6"/></svg></a></div>
+  </div>
+</header>
+<main class="doc"><div class="wrap narrow"><h1>Contact us</h1>
+<p class="sub">Questions about the course, a payment, or your course access? Write to us and we will get back to you.</p>
+<div class="card"><h2>E-mail</h2><p><a class="big-link" data-support-email href="#">our support team</a></p>
+<p class="sub">Please include the e-mail address you registered with. For payment questions, also include your Razorpay payment ID (it is in the payment confirmation e-mail or SMS).</p></div>
+<form id="cf" class="card" novalidate><h2>Send a message</h2>
+<label class="field">Your name<input name="name" required maxlength="80"></label>
+<label class="field">Your e-mail<input name="email" type="email" required maxlength="120"></label>
+<label class="field">Message<textarea name="message" rows="5" required maxlength="2000"></textarea></label>
+<button class="btn" type="submit">Open in my e-mail app</button><p id="cmsg" class="sub" role="status"></p></form>
+<script>
+document.getElementById("cf").addEventListener("submit",function(e){e.preventDefault();var c=window.SIN_CONFIG||{},m=document.getElementById("cmsg");
+if(!c.SUPPORT_EMAIL){m.textContent="Our support e-mail address will be published here soon. Please check back shortly.";return;}
+var f=e.target,b="Name: "+f.name.value+"\nEmail: "+f.email.value+"\n\n"+f.message.value;
+location.href="mailto:"+c.SUPPORT_EMAIL+"?subject="+encodeURIComponent("Scale It Now course enquiry")+"&body="+encodeURIComponent(b);m.textContent="Your e-mail app should open with the message ready to send.";});
+</script></div></main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <a class="brand" href="index.html"><img class="logo-mark" src="assets/logo-mark.jpg" alt=""><span><b>SCALE IT NOW</b><small>India's Best Digital Marketing Agency</small></span></a>
+      <nav aria-label="Footer"><a href="index.html">Home</a><a href="index.html#curriculum">Course</a><a href="index.html#about">About Us</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a><a href="verify.html">Verify Certificate</a></nav>
+      <div class="social" aria-label="Social links">
+        <a data-social="instagram" href="#" aria-label="Instagram" target="_blank" rel="noopener">IG</a><a data-social="youtube" href="#" aria-label="YouTube" target="_blank" rel="noopener">YT</a><a data-social="linkedin" href="#" aria-label="LinkedIn" target="_blank" rel="noopener">in</a><a data-social="whatsapp" href="#" aria-label="WhatsApp" target="_blank" rel="noopener">WA</a>
+      </div>
+    </div>
+    <div class="legal"><span>© <span data-year>2026</span> Scale It Now. All rights reserved.</span><span><a href="privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="terms.html">Terms &amp; Conditions</a></span></div>
+  </div>
+</footer>
+<script src="js/config.js"></script><script src="js/pixel.js"></script><script src="js/site.js"></script>
+</body>
+</html>

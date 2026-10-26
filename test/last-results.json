@@ -1,0 +1,176 @@
+[
+ [
+  1,
+  "Build guard + structure + secret scan succeed",
+  "auto",
+  "PASS"
+ ],
+ [
+  2,
+  "No login/signup/password/email-confirmation anywhere in the customer flow",
+  "auto",
+  "PASS"
+ ],
+ [
+  3,
+  "Checkout validates name and email (UI markup + server)",
+  "auto",
+  "PASS"
+ ],
+ [
+  4,
+  "Order creation is exactly 999900 paise INR; browser amount ignored; public key id only",
+  "mock",
+  "PASS"
+ ],
+ [
+  4.1,
+  "Double-click / repeat create-order reuses the open order (no duplicate orders)",
+  "mock",
+  "PASS"
+ ],
+ [
+  5,
+  "Missing credentials give clear SERVER-side errors and a safe customer message",
+  "auto",
+  "PASS"
+ ],
+ [
+  5.1,
+  "Razorpay API failures (bad credentials, network, outage) are handled gracefully",
+  "mock",
+  "PASS"
+ ],
+ [
+  5.2,
+  "Database not migrated yet -> clear server hint, safe customer message",
+  "auto",
+  "PASS"
+ ],
+ [
+  5.3,
+  "Server logs contain no secrets, tokens or e-mail addresses",
+  "auto",
+  "PASS"
+ ],
+ [
+  6,
+  "Invalid payment signatures are rejected; nothing unlocked",
+  "auto",
+  "PASS"
+ ],
+ [
+  7,
+  "Wrong amount / currency / order are rejected (checkout AND webhook paths)",
+  "mock",
+  "PASS"
+ ],
+ [
+  8,
+  "Failed, cancelled, pending and authorized payments",
+  "mock",
+  "PASS"
+ ],
+ [
+  9,
+  "Unverified payments never produce a certificate or an access token",
+  "auto",
+  "PASS"
+ ],
+ [
+  10,
+  "Duplicate/concurrent callbacks (verify x5 + webhook x3) -> ONE paid purchase, ONE certificate, ONE browser token",
+  "mock",
+  "PASS"
+ ],
+ [
+  10.1,
+  "Webhook first, then browser: buyer still gets exactly one browser token",
+  "mock",
+  "PASS"
+ ],
+ [
+  11,
+  "Verified purchasers get course access (16 lessons) and lesson player URLs",
+  "auto",
+  "PASS"
+ ],
+ [
+  12,
+  "Certificate PDF contains the purchaser's name, course, date, unique ID and verification URL; says enrollment, not completion",
+  "auto",
+  "PASS"
+ ],
+ [
+  13,
+  "Certificate IDs are unique, well-formed and verifiable; revoked ones are invalid",
+  "auto",
+  "PASS"
+ ],
+ [
+  13.1,
+  "Cert-ID race: two simultaneous issuances for one purchase give one certificate",
+  "auto",
+  "PASS"
+ ],
+ [
+  14,
+  "Customers cannot reach other customers' purchases by changing tokens, URLs or parameters",
+  "auto",
+  "PASS"
+ ],
+ [
+  14.1,
+  "Only a HASH of each token is stored; raw tokens exist nowhere server-side",
+  "auto",
+  "PASS"
+ ],
+ [
+  14.2,
+  "Recovery without an account: needs e-mail + payment ID; wrong details get nothing",
+  "auto",
+  "PASS"
+ ],
+ [
+  14.3,
+  "Optional e-mail: first confirmation sends ONE e-mail with link + certificate; recovery e-mails and reveals nothing",
+  "mock",
+  "PASS"
+ ],
+ [
+  15,
+  "Public files contain no server-side secrets, keys or secret variable names",
+  "auto",
+  "PASS"
+ ],
+ [
+  15.1,
+  "health endpoint reveals only flags, never values",
+  "auto",
+  "PASS"
+ ],
+ [
+  16,
+  "The 16 lessons, titles, descriptions and YouTube configuration are preserved byte-for-byte from the supplied ZIP",
+  "auto",
+  "PASS"
+ ],
+ [
+  16.1,
+  "Landing page: honest copy (no fake discount, scarcity, counters, reviews) and working Buy buttons",
+  "auto",
+  "PASS"
+ ],
+ [
+  16.2,
+  "Meta Pixel: on public pages, never on access/lesson pages; Purchase is live-only, once, and leaks no token/e-mail",
+  "auto",
+  "PASS"
+ ],
+ [
+  17,
+  "Every Netlify Function loads, exports a handler and rejects wrong HTTP methods",
+  "auto",
+  "PASS"
+ ]
+]
