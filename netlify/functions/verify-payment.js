@@ -1,6 +1,6 @@
 const db = require("./_lib/supabase"), { dbError } = require("./_lib/supabase");
 const { json, fail, parseBody, siteUrl, AppError } = require("./_lib/http");
-const { verifyCheckoutSignature, fetchPayment, capturePayment, PRICE_PAISE, CURRENCY } = require("./_lib/razorpay");
+const { verifyCheckoutSignature, fetchPayment, capturePayment, PRICE_MINOR, CURRENCY } = require("./_lib/razorpay");
 const { confirmPurchase, markFailed, claimBrowserToken, issueToken } = require("./_lib/purchase");
 const { notifyBuyer } = require("./_lib/notify");
 
@@ -22,8 +22,8 @@ exports.handler = async (event) => {
 
     let p = await fetchPayment(paymentId);
     if (p.order_id !== orderId) throw new AppError("payment_order_mismatch", 400, "This payment does not belong to this order.");
-    if (p.amount !== PRICE_PAISE || p.currency !== CURRENCY || purchase.amount_paise !== p.amount) throw new AppError("amount_mismatch", 400, "The paid amount does not match the course price. Please contact support.", `amount/currency mismatch: ${p.amount} ${p.currency}`);
-    if (p.status === "authorized") p = await capturePayment(paymentId, PRICE_PAISE, CURRENCY); // accounts set to manual capture
+    if (p.amount !== PRICE_MINOR || p.currency !== CURRENCY || purchase.amount_paise !== p.amount) throw new AppError("amount_mismatch", 400, "The paid amount does not match the course price. Please contact support.", `amount/currency mismatch: ${p.amount} ${p.currency}`);
+    if (p.status === "authorized") p = await capturePayment(paymentId, PRICE_MINOR, CURRENCY); // accounts set to manual capture
     if (p.status === "failed") { await markFailed(orderId); return json(402, { status: "failed", error: "The payment did not go through. You have not been charged for the course. Please try again." }); }
     if (p.status !== "captured") return json(202, { status: "pending", message: "Your payment is still being confirmed." }); // webhook / retry will finish it
 

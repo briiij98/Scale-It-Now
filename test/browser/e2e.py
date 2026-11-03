@@ -26,7 +26,7 @@ try:
         ctx.route(re.compile(r"https://fonts\.(googleapis|gstatic)\.com/.*"), lambda r: r.abort())
         # landing
         page.goto(B + "/index.html"); html = page.content()
-        check("landing: Buy Course buttons go to checkout", page.locator('a[href="checkout.html"]').count() >= 3 and "₹9,999" in html)
+        check("landing: Buy Course buttons go to checkout", page.locator('a[href="checkout.html"]').count() >= 3 and "$99" in html)
         check("landing: no login/signup links, no fake discount", page.locator('a[href*="login"], a[href*="signup"]').count() == 0 and "49,000" not in html and "Diwali" not in html)
         # checkout validation
         page.goto(B + "/checkout.html")
@@ -39,7 +39,7 @@ try:
         page.evaluate("window.__cancel = true"); page.fill("#email", "asha@example.com"); page.click("#payBtn")
         page.wait_for_function("document.getElementById('msg').textContent.includes('cancelled')")
         check("checkout: cancelled payment shows message, page stays, no access", page.url.endswith("checkout.html") and page.evaluate("localStorage.getItem('sin_access_token')") is None)
-        opts = page.evaluate("window.__rzpOpts"); check("checkout: Razorpay opened with 999900 INR and public key id", opts["amount"] == 999900 and opts["currency"] == "INR" and opts["key"].startswith("rzp_test_") and opts["order_id"].startswith("order_"))
+        opts = page.evaluate("window.__rzpOpts"); check("checkout: Razorpay opened with 9900 USD and public key id", opts["amount"] == 9900 and opts["currency"] == "USD" and opts["key"].startswith("rzp_test_") and opts["order_id"].startswith("order_"))
         # successful payment
         page.evaluate("window.__cancel = false"); page.click("#payBtn")
         page.wait_for_url("**/success.html", timeout=15000); page.wait_for_selector("#ready:not([hidden])")
@@ -77,7 +77,7 @@ try:
         pm.goto(B + "/checkout.html"); pm.fill("#name", "Meera Shah"); pm.fill("#email", "meera@example.com"); pm.check("#agree"); pm.click("#payBtn")
         pm.wait_for_url("**/success.html", timeout=15000); pm.wait_for_selector("#ready:not([hidden])")
         q = fbq(pm); names = [e[1] for e in q]
-        check("pixel: live purchase fires Purchase once with 9999 INR", names.count("Purchase") == 1 and [e for e in q if e[1] == "Purchase"][0][2]["value"] == 9999 and [e for e in q if e[1] == "Purchase"][0][2]["currency"] == "INR")
+        check("pixel: live purchase fires Purchase once with 99 USD", names.count("Purchase") == 1 and [e for e in q if e[1] == "Purchase"][0][2]["value"] == 99 and [e for e in q if e[1] == "Purchase"][0][2]["currency"] == "USD")
         check("pixel: payload has no e-mail, name or token", "meera" not in json.dumps(q).lower() and "Meera" not in json.dumps(q) and "#t=" not in json.dumps(q))
         pm.reload(); pm.wait_for_selector("#ready:not([hidden])"); check("pixel: reloading success page does NOT fire Purchase again", "Purchase" not in [e[1] for e in fbq(pm)])
         pa = ctx.new_page(); pa.goto(B + "/access.html"); check("pixel: not loaded on access page", pa.evaluate("typeof window.fbq") == "undefined")

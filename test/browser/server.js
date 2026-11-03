@@ -18,7 +18,7 @@ http.createServer(async (req, res) => {
   if (url.pathname === "/__test/live") { process.env.RAZORPAY_KEY_ID = url.searchParams.get("on") === "1" ? "rzp_live_BrowserFake1" : "rzp_test_BrowserFake1"; return res.end("ok"); }
   if (url.pathname === "/__test/pay") { // simulate a successful payment for ?order=
     const order = url.searchParams.get("order"), id = "pay_" + crypto.randomBytes(7).toString("hex");
-    payments[id] = { id, order_id: order, amount: 999900, currency: "INR", status: url.searchParams.get("status") || "captured" };
+    payments[id] = { id, order_id: order, amount: 9900, currency: "USD", status: url.searchParams.get("status") || "captured" };
     res.setHeader("Content-Type", "application/json"); return res.end(JSON.stringify({ razorpay_order_id: order, razorpay_payment_id: id, razorpay_signature: crypto.createHmac("sha256", SECRET).update(order + "|" + id).digest("hex") }));
   }
   if (url.pathname.startsWith("/.netlify/functions/")) {

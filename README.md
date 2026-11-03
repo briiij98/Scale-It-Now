@@ -1,6 +1,6 @@
 # Scale It Now Academy
 
-Course site for **Digital Marketing Fundamentals** (₹9,999, 16 lessons). Static frontend in `public/`, Netlify Functions in `netlify/functions/`, Supabase for records, Razorpay for payment.
+Course site for **Digital Marketing Fundamentals** ($99 USD, 16 lessons). Static frontend in `public/`, Netlify Functions in `netlify/functions/`, Supabase for records, Razorpay for payment.
 
 Flow: landing → Buy Course → name + email → Razorpay → server-verified payment → instant certificate + course access. No registration, password or email confirmation. Access is a private link (`/access.html#t=…`, 256-bit token, only its SHA-256 hash stored).
 

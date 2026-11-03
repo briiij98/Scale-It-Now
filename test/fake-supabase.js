@@ -56,7 +56,7 @@ class Query {
       const made = [];
       for (const it of Array.isArray(this.v) ? this.v : [this.v]) {
         const row = { id: "id" + ++seq, created_at: new Date().toISOString(), ...it };
-        if (this.t === "purchases") { row.status = row.status || "created"; row.currency = row.currency || "INR"; }
+        if (this.t === "purchases") { row.status = row.status || "created"; row.currency = row.currency || "USD"; }
         if (this.violates(t, row)) return { data: null, error: { code: "23505", message: "duplicate key value violates unique constraint" } };
         t.push(row); made.push({ ...row });
       }

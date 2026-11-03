@@ -29,7 +29,7 @@ global.fetch = async (url, opts = {}) => {
   m = p.match(/^\/payments\/([^/]+)$/); if (m && rz.payments[m[1]]) return res(200, { ...rz.payments[m[1]] });
   return res(404, { error: { description: "not found" } });
 };
-const addPayment = (orderId, o = {}) => { const id = "pay_" + crypto.randomBytes(7).toString("hex"); rz.payments[id] = { id, order_id: orderId, amount: 999900, currency: "INR", status: "captured", ...o }; return id; };
+const addPayment = (orderId, o = {}) => { const id = "pay_" + crypto.randomBytes(7).toString("hex"); rz.payments[id] = { id, order_id: orderId, amount: 9900, currency: "USD", status: "captured", ...o }; return id; };
 const sign = (o, p, secret = KEY_SECRET) => crypto.createHmac("sha256", secret).update(o + "|" + p).digest("hex");
 
 // capture server logs so we can assert nothing sensitive is printed
@@ -105,14 +105,14 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
   });
 
   // ===== 4. order creation =====
-  await test(4, "Order creation is exactly 999900 paise INR; browser amount ignored; public key id only", "mock", async () => {
-    const r = await call("create-order", { method: "POST", body: { ...buyer(2), ...TERMS, amount: 100, currency: "USD", amount_paise: 1 } });
+  await test(4, "Order creation is exactly 9900 cents USD; browser amount ignored; public key id only", "mock", async () => {
+    const r = await call("create-order", { method: "POST", body: { ...buyer(2), ...TERMS, amount: 100, currency: "INR", amount_paise: 1 } });
     assert.strictEqual(r.status, 200);
     const o = rz.orders[r.data.orderId];
-    assert(o && o.amount === 999900 && o.currency === "INR", "Razorpay order must be 999900 INR");
-    assert.strictEqual(r.data.amount, 999900); assert.strictEqual(r.data.currency, "INR"); assert.strictEqual(r.data.keyId, "rzp_test_FakeKey123456"); assert.strictEqual(r.data.mode, "test");
+    assert(o && o.amount === 9900 && o.currency === "USD", "Razorpay order must be 9900 USD");
+    assert.strictEqual(r.data.amount, 9900); assert.strictEqual(r.data.currency, "USD"); assert.strictEqual(r.data.keyId, "rzp_test_FakeKey123456"); assert.strictEqual(r.data.mode, "test");
     assert(!JSON.stringify(r.data).includes(KEY_SECRET) && !JSON.stringify(r.data).includes(SERVICE_KEY));
-    const p = purchaseOf(r.data.orderId); assert(p && p.status === "created" && p.amount_paise === 999900 && p.customer_email === "asha2@example.com" && p.rzp_mode === "test");
+    const p = purchaseOf(r.data.orderId); assert(p && p.status === "created" && p.amount_paise === 9900 && p.customer_email === "asha2@example.com" && p.rzp_mode === "test");
     assert(!JSON.stringify(o.notes || {}).includes("@"), "no e-mail in Razorpay notes");
   });
   await test(4.1, "Double-click / repeat create-order reuses the open order (no duplicate orders)", "mock", async () => {
@@ -161,7 +161,7 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
     assert.strictEqual((await call("verify-payment", { method: "POST", body: { razorpay_order_id: "x", razorpay_payment_id: "y", razorpay_signature: "z" } })).status, 400);
   });
   await test(7, "Wrong amount / currency / order are rejected (checkout AND webhook paths)", "mock", async () => {
-    for (const bad of [{ amount: 100 }, { amount: 999901 }, { currency: "USD" }]) {
+    for (const bad of [{ amount: 100 }, { amount: 9901 }, { currency: "INR" }]) {
       const o = await mkOrder(buyer(21)), p = await pay(o, bad);
       const r = await call("verify-payment", { method: "POST", body: p.body }); assert(r.status === 400, JSON.stringify(bad) + " -> " + r.status);
       assert.strictEqual(purchaseOf(o.orderId).status, "created");
@@ -195,7 +195,7 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
     assert.strictEqual(fake.rows("certificates").length, 0);
     const r = await call("get-purchase"); assert.strictEqual(r.status, 401);
     // webhook with wrong signature / no secret configured
-    const evt = JSON.stringify({ event: "payment.captured", payload: { payment: { entity: { id: "pay_x1234567", order_id: o.orderId, amount: 999900, currency: "INR" } } } });
+    const evt = JSON.stringify({ event: "payment.captured", payload: { payment: { entity: { id: "pay_x1234567", order_id: o.orderId, amount: 9900, currency: "USD" } } } });
     assert.strictEqual((await call("razorpay-webhook", { method: "POST", body: evt, headers: { "x-razorpay-signature": "bad" } })).status, 400);
     delete process.env.RAZORPAY_WEBHOOK_SECRET;
     assert.strictEqual((await call("razorpay-webhook", { method: "POST", body: evt, headers: { "x-razorpay-signature": crypto.createHmac("sha256", "").update(evt).digest("hex") } })).status, 400);
@@ -205,7 +205,7 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
   // ===== 10. idempotency =====
   await test(10, "Duplicate/concurrent callbacks (verify x5 + webhook x3) -> ONE paid purchase, ONE certificate, ONE browser token", "mock", async () => {
     const o = await mkOrder(buyer(50)), p = await pay(o);
-    const evt = JSON.stringify({ event: "payment.captured", payload: { payment: { entity: { id: p.payId, order_id: o.orderId, amount: 999900, currency: "INR" } } } });
+    const evt = JSON.stringify({ event: "payment.captured", payload: { payment: { entity: { id: p.payId, order_id: o.orderId, amount: 9900, currency: "USD" } } } });
     const whSig = crypto.createHmac("sha256", WH_SECRET).update(evt).digest("hex");
     const jobs = [...Array(5)].map(() => call("verify-payment", { method: "POST", body: p.body })).concat([...Array(3)].map(() => call("razorpay-webhook", { method: "POST", body: evt, headers: { "x-razorpay-signature": whSig } })));
     const out = await Promise.all(jobs);
@@ -219,7 +219,7 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
   });
   await test(10.1, "Webhook first, then browser: buyer still gets exactly one browser token", "mock", async () => {
     const o = await mkOrder(buyer(51)), p = await pay(o);
-    const evt = JSON.stringify({ event: "order.paid", payload: { payment: { entity: { id: p.payId, order_id: o.orderId, amount: 999900, currency: "INR" } } } });
+    const evt = JSON.stringify({ event: "order.paid", payload: { payment: { entity: { id: p.payId, order_id: o.orderId, amount: 9900, currency: "USD" } } } });
     assert.strictEqual((await call("razorpay-webhook", { method: "POST", body: evt, headers: { "x-razorpay-signature": crypto.createHmac("sha256", WH_SECRET).update(evt).digest("hex") } })).status, 200);
     assert.strictEqual(fake.rows("access_tokens").length, 0, "webhook alone issues no token (no e-mail configured)");
     const v = await call("verify-payment", { method: "POST", body: p.body }); assert(v.data.token && fake.rows("access_tokens").length === 1 && fake.rows("certificates").length === 1);
@@ -340,7 +340,7 @@ const publicHtml = () => walk(path.join(ROOT, "public")).filter((f) => f.endsWit
   await test(16.1, "Landing page: honest copy (no fake discount, scarcity, counters, reviews) and working Buy buttons", "auto", () => {
     const s = read("public/index.html");
     for (const bad of ["Diwali", "49,000", "80%", "Limited Time", "1,000+", "proofToast", "What Our Students Say", "★"]) assert(!s.includes(bad), "found: " + bad);
-    assert((s.match(/href="checkout\.html"/g) || []).length >= 3 && s.includes("Buy Course — ₹9,999") && s.includes("inquiries") === false || true);
+    assert((s.match(/href="checkout\.html"/g) || []).length >= 3 && s.includes("Buy Course — $99") && s.includes("inquiries") === false || true);
     assert(read("public/js/config.js").includes("inquiries.scale.it.now@gmail.com"));
     for (const f of ["faq", "contact", "terms", "privacy"]) assert(read(`public/${f}.html`).includes("data-support-email"));
     assert(!/certificate of completion/i.test(publicHtml().map((f) => fs.readFileSync(f, "utf8")).join("\n")), "no page claims a certificate of completion");

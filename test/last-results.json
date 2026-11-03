@@ -3,7 +3,7 @@
   1,
   "Build guard + structure + secret scan succeed",
   "auto",
-  "PASS"
+  "FAIL: Command failed: node scripts/check-structure.js"
  ],
  [
   2,
@@ -19,7 +19,7 @@
  ],
  [
   4,
-  "Order creation is exactly 999900 paise INR; browser amount ignored; public key id only",
+  "Order creation is exactly 9900 cents USD; browser amount ignored; public key id only",
   "mock",
   "PASS"
  ],

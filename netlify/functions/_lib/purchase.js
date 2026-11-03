@@ -2,7 +2,7 @@
 const crypto = require("crypto");
 const db = require("./supabase"), { dbError } = require("./supabase");
 const { AppError } = require("./http");
-const { PRICE_PAISE, CURRENCY } = require("./razorpay");
+const { PRICE_MINOR, CURRENCY } = require("./razorpay");
 const { COURSE_TITLE } = require("./course");
 
 const NAME_RE = /^[A-Za-z][A-Za-z .'-]{1,59}$/;        // printed on the certificate with standard PDF fonts: English letters only
@@ -70,7 +70,7 @@ async function ensureCertificate(purchase) {
 // IDEMPOTENT: callable from verify-payment AND the webhook, in any order, any number of times, concurrently.
 // Only a payment that Razorpay itself reported for OUR order, with the exact amount and currency, can unlock anything.
 async function confirmPurchase({ orderId, paymentId, amount, currency }) {
-  if (amount !== PRICE_PAISE || currency !== CURRENCY) return { ok: false, reason: "amount_mismatch" };
+  if (amount !== PRICE_MINOR || currency !== CURRENCY) return { ok: false, reason: "amount_mismatch" };
   const { data: p, error } = await db().from("purchases").select("*").eq("razorpay_order_id", orderId).maybeSingle();
   if (error) throw dbError(error, "lookup purchase by order");
   if (!p) return { ok: false, reason: "unknown_order" };

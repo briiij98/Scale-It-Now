@@ -3,7 +3,7 @@
   const $ = (id) => document.getElementById(id);
   const form = $("coForm"), btn = $("payBtn"), msg = $("msg"), agree = $("agree");
   const NAME_RE = /^[A-Za-z][A-Za-z .'-]{1,59}$/, EMAIL_RE = /^[^\s@<>"'()\\,;:]+@[^\s@<>"'()\\,;:]+\.[A-Za-z]{2,}$/;
-  const LABEL = "Pay ₹9,999";
+  const LABEL = "Pay $99";
   let busy = false;
 
   const setMsg = (t, kind) => { msg.textContent = t || ""; msg.className = kind || ""; };

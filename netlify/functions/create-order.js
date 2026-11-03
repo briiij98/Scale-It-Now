@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const db = require("./_lib/supabase"), { dbError } = require("./_lib/supabase");
 const { json, fail, parseBody, AppError } = require("./_lib/http");
-const { createOrder, creds, PRICE_PAISE, CURRENCY } = require("./_lib/razorpay");
+const { createOrder, creds, PRICE_MINOR, CURRENCY } = require("./_lib/razorpay");
 const { cleanName, cleanEmail, isValidName, isValidEmail } = require("./_lib/purchase");
 const { TERMS_VERSION } = require("./_lib/course");
 
@@ -32,14 +32,14 @@ exports.handler = async (event) => {
       const terms_accepted_at = new Date().toISOString();
       // Terms acceptance is also stored on the Razorpay order as a second, independent record. No secrets or contact details in notes.
       const order = await createOrder(receipt, { terms_version: TERMS_VERSION, terms_accepted_at, course: "digital-marketing-fundamentals" });
-      if (!order || !order.id || order.amount !== PRICE_PAISE || order.currency !== CURRENCY) throw new AppError("razorpay_bad_order", 502, "The payment provider returned an unexpected order. Please try again.", "order response mismatch");
+      if (!order || !order.id || order.amount !== PRICE_MINOR || order.currency !== CURRENCY) throw new AppError("razorpay_bad_order", 502, "The payment provider returned an unexpected order. Please try again.", "order response mismatch");
       const { error } = await db().from("purchases").insert({
-        razorpay_order_id: order.id, customer_name: name, customer_email: email, amount_paise: PRICE_PAISE, currency: CURRENCY,
+        razorpay_order_id: order.id, customer_name: name, customer_email: email, amount_paise: PRICE_MINOR, currency: CURRENCY,
         status: "created", rzp_mode: mode, terms_version: TERMS_VERSION, terms_accepted_at,
       });
       if (error) throw dbError(error, "save order");
       orderId = order.id;
     }
-    return json(200, { keyId, orderId, amount: PRICE_PAISE, currency: CURRENCY, name, email, mode, reused }); // keyId is the PUBLIC key id only
+    return json(200, { keyId, orderId, amount: PRICE_MINOR, currency: CURRENCY, name, email, mode, reused }); // keyId is the PUBLIC key id only
   } catch (e) { return fail("create-order", e); }
 };

@@ -8,7 +8,7 @@
   fbq('init', ID);
   fbq('track', 'PageView');
   var page = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
-  var PRODUCT = { content_name: 'Digital Marketing Fundamentals', content_ids: ['digital-marketing-fundamentals'], content_type: 'product', value: 9999, currency: 'INR' };
+  var PRODUCT = { content_name: 'Digital Marketing Fundamentals', content_ids: ['digital-marketing-fundamentals'], content_type: 'product', value: 99, currency: 'USD' };
   if (page === 'index') fbq('track', 'ViewContent', PRODUCT);
   window.SIN_PIXEL = {
     product: PRODUCT,

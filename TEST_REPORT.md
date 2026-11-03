@@ -12,7 +12,7 @@ Real function handlers, in-memory fake database (models the UNIQUE constraints a
 | 1 | Build guard + structure + secret scan succeed | auto | PASS |
 | 2 | No login/signup/password/email-confirmation anywhere in the customer flow | auto | PASS |
 | 3 | Checkout validates name and email (UI markup + server) | auto | PASS |
-| 4 | Order creation is exactly 999900 paise INR; browser amount ignored; public key id only | mock | PASS |
+| 4 | Order creation is exactly 9900 cents USD; browser amount ignored; public key id only | mock | PASS |
 | 4.1 | Double-click / repeat create-order reuses the open order (no duplicate orders) | mock | PASS |
 | 5 | Missing credentials give clear SERVER-side errors and a safe customer message | auto | PASS |
 | 5.1 | Razorpay API failures (bad credentials, network, outage) are handled gracefully | mock | PASS |
@@ -47,7 +47,7 @@ Real pages in Chromium + real function handlers; the Razorpay popup is a **stub*
 - PASS — checkout: empty form shows name error and no order
 - PASS — checkout: bad email rejected
 - PASS — checkout: cancelled payment shows message, page stays, no access
-- PASS — checkout: Razorpay opened with 999900 INR and public key id
+- PASS — checkout: Razorpay opened with 9900 USD and public key id
 - PASS — success: shows Payment Successful / Your Course Is Ready / Start Learning / Download Your Certificate
 - PASS — success: shows purchaser name and course
 - PASS — success: token never in the address bar

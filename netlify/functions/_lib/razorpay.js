@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const { AppError } = require("./http");
-const PRICE_PAISE = 999900; // Rs 9,999 - fixed on the server, never read from the browser
-const CURRENCY = "INR";
+const PRICE_MINOR = 9900; // USD 99.00 in cents - fixed on the server, never read from the browser
+const CURRENCY = "USD";
 
 // Returns { keyId, secret, mode } or throws a config error that names the missing variable in the SERVER LOG only.
 function creds() {
@@ -35,7 +35,7 @@ async function rzp(path, options = {}) {
   return data;
 }
 const createOrder = (receipt, notes) =>
-  rzp("/orders", { method: "POST", body: JSON.stringify({ amount: PRICE_PAISE, currency: CURRENCY, receipt, notes }) });
+  rzp("/orders", { method: "POST", body: JSON.stringify({ amount: PRICE_MINOR, currency: CURRENCY, receipt, notes }) });
 const fetchPayment = (id) => rzp("/payments/" + encodeURIComponent(id));
 const capturePayment = (id, amount, currency) => rzp(`/payments/${encodeURIComponent(id)}/capture`, { method: "POST", body: JSON.stringify({ amount, currency }) });
 
@@ -51,4 +51,4 @@ const verifyCheckoutSignature = (orderId, paymentId, signature) =>
 const verifyWebhookSignature = (rawBody, signature) =>
   !!process.env.RAZORPAY_WEBHOOK_SECRET && safeEqual(hmac(process.env.RAZORPAY_WEBHOOK_SECRET, rawBody), signature);
 
-module.exports = { PRICE_PAISE, CURRENCY, creds, mode, createOrder, fetchPayment, capturePayment, verifyCheckoutSignature, verifyWebhookSignature };
+module.exports = { PRICE_MINOR, CURRENCY, creds, mode, createOrder, fetchPayment, capturePayment, verifyCheckoutSignature, verifyWebhookSignature };
